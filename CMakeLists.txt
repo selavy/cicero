@@ -1,30 +1,56 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
-project(Cicero C)
+# ---- Project ----
 
+project(
+    Cicero
+    VERSION 1.0
+    LANGUAGES C
+)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
-
-include(cmake/CompilerWarnings.cmake)
-# add_library(cxx_project_warnings INTERFACE)
-add_library(c_project_warnings   INTERFACE)
-# set_cxx_project_warnings(cxx_project_warnings)
-set_c_project_warnings(c_project_warnings)
-
-# add_library(cxx_project_options INTERFACE)
-add_library(c_project_options   INTERFACE)
-# target_compile_features(cxx_project_options INTERFACE cxx_std_17)
-target_compile_features(c_project_options   INTERFACE c_std_99)
-include(cmake/Sanitizers.cmake)
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message("-- enabling sanitizers")
-    # enable_sanitizers(cxx_project_options)
-    enable_sanitizers(c_project_options)
-endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
-
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
+cmake_policy(SET CMP0048 NEW)
+
+# ---- Include guards ----
+
+if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
+  message(
+    FATAL_ERROR
+      "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there."
+  )
+endif()
+
+# ---- Compiler Options ----
+include(cmake/CompilerWarnings.cmake)
+include(cmake/tools.cmake)
+# add_library(c_project_warnings INTERFACE)
+# set_c_project_warnings(c_project_warnings)
+#
+# add_library(c_project_options INTERFACE)
+# target_compile_features(c_project_options   INTERFACE c_std_99)
+# include(cmake/Sanitizers.cmake)
+# if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+#     message("-- enabling sanitizers")
+#     enable_sanitizers(c_project_options)
+# endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+# ---- Add dependencies ----
+include(cmake/CPM.cmake)
+
+# PackageProject.cmake will be used to make our target installable
+CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.6.0")
+
+# CPMAddPackage("gh:cgreen-devs/cgreen#1.4.0")
+CPMAddPackage(
+    NAME cgreen
+    GIT_TAG 1.4.0
+    GITHUB_REPOSITORY cgreen-devs/cgreen
+    OPTIONS "CGREEN_WITH_UNIT_TESTS OFF"
+)
+
+# ---- Create Library ----
 add_library(Cicero
     include/cicero/cicero.h
     src/cicero_types.h
@@ -35,11 +61,31 @@ add_library(Cicero
     src/score.c
     src/legal.c
 )
-target_link_libraries(Cicero
-    PRIVATE
-    c_project_options
-    # c_project_warnings
+target_compile_features(Cicero PRIVATE c_std_99)
+set_c_project_warnings(Cicero)
+target_include_directories(
+    Cicero PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> 
+                  $<INSTALL_INTERFACE:include/${PROJECT_NAME}-${PROJECT_VERSION}>
 )
-target_include_directories(Cicero PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+# ---- Create an installable target ----
+# this allows users to install and find the library via `find_package()`.
+
+# the location where the project's version header will be placed should match the project's regular
+# header paths
+string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
+
+packageProject(
+  NAME ${PROJECT_NAME}
+  VERSION ${PROJECT_VERSION}
+  NAMESPACE ${PROJECT_NAME}
+  BINARY_DIR ${PROJECT_BINARY_DIR}
+  INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
+  INCLUDE_DESTINATION include/${PROJECT_NAME}-${PROJECT_VERSION}
+  VERSION_HEADER "${VERSION_HEADER_LOCATION}"
+  COMPATIBILITY SameMajorVersion
+  # DEPENDENCIES "fmt 7.1.3"
+)
+
+# ---- Subdirectories ----
 add_subdirectory(tests)

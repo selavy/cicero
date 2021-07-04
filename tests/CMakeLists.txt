@@ -1,7 +1,12 @@
-add_executable(tests tests.c)
-target_link_libraries(tests
+add_executable(cgreen-first cgreen-first.c)
+target_link_libraries(cgreen-first
     PUBLIC
-        c_project_options
-        # c_project_warnings
+        Cicero
+        ${CGREEN_SHARED_LIBRARY}
 )
-# TODO: add to ctest
+target_include_directories(
+    cgreen-first
+    PUBLIC
+    ${CGREEN_PUBLIC_INCLUDE_DIRS}
+)
+target_compile_features(cgreen-first PUBLIC c_std_99)
