@@ -1,5 +1,7 @@
 #include <cgreen/cgreen.h>
+#include <cicero/cicero.h>
 #include <string.h>
+#include <assert.h>
 
 Describe(Strlen);
 BeforeEach(Strlen) {}

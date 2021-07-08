@@ -42,7 +42,6 @@ include(cmake/CPM.cmake)
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.6.0")
 
-# CPMAddPackage("gh:cgreen-devs/cgreen#1.4.0")
 CPMAddPackage(
     NAME cgreen
     GIT_TAG 1.4.0
@@ -64,7 +63,7 @@ add_library(Cicero
 target_compile_features(Cicero PRIVATE c_std_99)
 set_c_project_warnings(Cicero)
 target_include_directories(
-    Cicero PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> 
+    Cicero PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
                   $<INSTALL_INTERFACE:include/${PROJECT_NAME}-${PROJECT_VERSION}>
 )
 
