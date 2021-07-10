@@ -52,6 +52,7 @@ CPMAddPackage(
 # ---- Create Library ----
 add_library(Cicero
     include/cicero/cicero.h
+    include/cicero/mafsa.h
     src/cicero_types.h
     src/cicero_tables.h
     src/init.c
@@ -59,6 +60,9 @@ add_library(Cicero
     src/movegen.c
     src/score.c
     src/legal.c
+    src/mafsabuilder.c
+    src/mafsa.c
+    src/iconv.h
 )
 target_compile_features(Cicero PRIVATE c_std_99)
 set_c_project_warnings(Cicero)
