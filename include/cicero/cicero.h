@@ -1,5 +1,5 @@
-#ifndef CICERO__H_
-#define CICERO__H_
+#ifndef CICERO_CICERO__H_
+#define CICERO_CICERO__H_
 
 #include <stdint.h>
 
@@ -16,6 +16,14 @@ enum cicero_direction
 };
 typedef enum cicero_direction cicero_direction;
 
+#define CICERO_DIM   15
+#define CICERO_NROWS CICERO_DIM
+#define CICERO_NCOLS CICERO_DIM
+#define CICERO_MAX_WORD_LEN CICERO_DIM
+#define CICERO_MIN_WORD_LEN 2
+#define CICERO_NSQS (CICERO_NROWS * CICERO_NCOLS)
+#define CICERO_INVALID_SQUARE 225
+
 struct cicero_edges
 {
     int  terminal;
@@ -29,8 +37,9 @@ typedef cicero_edges (*prefix_edges)(void *data, const char *prefix);
 // non-zero indicates is valid word
 typedef int (*cicero_is_word)(const void *data, const char *word);
 
-enum cicero_legal_move_errnum
+enum cicero_legal_move_error
 {
+    CICERO_OK                         =  0,
     CICERO_LEGAL_MOVE                 =  0,
     CICERO_MOVE_NOT_IN_SAME_DIRECTION = -1,
     CICERO_MOVE_LEAVES_EMPTY_SQUARES  = -2,
@@ -40,6 +49,8 @@ enum cicero_legal_move_errnum
     CICERO_TOO_MANY_TILES             = -6,
     CICERO_WORD_TOO_SHORT             = -7,
     CICERO_FIRST_MOVE_MUST_OCCUPY_H8  = -8,
+    CICERO_SQUARE_INVALID             = -9,
+    CICERO_DIRECTION_INVALID          = -10,
 };
 
 enum cicero_multiplier_
@@ -107,10 +118,10 @@ typedef struct cicero_scoring cicero_scoring;
 struct cicero_savepos
 {
     // TODO: see if I can reduce how much state is saved
-    uint16_t hscr[225]; // if playing horizontally at square, how many additional points you'd score
-    uint16_t vscr[225];
-    uint32_t hchk[225]; // if playing horizontally, need to check hchk
-    uint32_t vchk[225];
+    uint16_t hscr[CICERO_NSQS]; // if playing horizontally at square, how many additional points you'd score
+    uint16_t vscr[CICERO_NSQS];
+    uint32_t hchk[CICERO_NSQS]; // if playing horizontally, need to check hchk
+    uint32_t vchk[CICERO_NSQS];
     uint64_t asqs[4];
 };
 typedef struct cicero_savepos cicero_savepos;
@@ -122,17 +133,17 @@ struct cicero
     // and highest possible score on 1 move is 1,778 points
 
     // the tiles on the board, use cicero_tile_on_square to access
-    char     vals[225];
+    char vals[CICERO_NSQS];
 
     // cached cross-score values. hscr holds the cross-score formed vertically
     // for a tile played as part of a horizontal word.
-    uint16_t hscr[225]; // if playing horizontally at square, how many additional points you'd score
-    uint16_t vscr[225];
+    uint16_t hscr[CICERO_NSQS]; // if playing horizontally at square, how many additional points you'd score
+    uint16_t vscr[CICERO_NSQS];
 
     // cross-checks, if playing horizontally, check hchk to see if words
     // formed are valid vertically
-    uint32_t hchk[225];
-    uint32_t vchk[225];
+    uint32_t hchk[CICERO_NSQS];
+    uint32_t vchk[CICERO_NSQS];
 
     // anchor squares bitmask
     uint64_t asqs[4];
@@ -187,7 +198,7 @@ cicero_api int  cicero_legal_move_ex(const cicero *e, const cicero_move *move,
 
 cicero_api int  cicero_legal_move(const cicero *e, const cicero_move *move);
 
-cicero_api const char *cicero_legal_move_errnum_to_string(int errnum);
+cicero_api const char *cicero_legal_move_error_to_string(int ec);
 
 cicero_api cicero_multiplier cicero_square_multiplier(const cicero* e, int sq);
 
@@ -202,4 +213,4 @@ cicero_api void cicero_load_position_ex(cicero* e, const cicero* position);
 }
 #endif
 
-#endif // CICERO__H_
+#endif // CICERO_CICERO__H_

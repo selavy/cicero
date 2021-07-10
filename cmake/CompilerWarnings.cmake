@@ -10,10 +10,10 @@ function(set_cxx_project_warnings project_name)
 
   set(MSVC_WARNINGS
       /W4 # Baseline reasonable warnings
-      /w14242 # 'identfier': conversion from 'type1' to 'type1', possible loss
-              # of data
-      /w14254 # 'operator': conversion from 'type1:field_bits' to
-              # 'type2:field_bits', possible loss of data
+      # /w14242 # 'identfier': conversion from 'type1' to 'type1', possible loss
+      #         # of data
+      # /w14254 # 'operator': conversion from 'type1:field_bits' to
+      #         # 'type2:field_bits', possible loss of data
       /w14263 # 'function': member function does not override any base class
               # virtual member function
       /w14265 # 'classname': class has virtual functions, but destructor is not
@@ -55,7 +55,7 @@ function(set_cxx_project_warnings project_name)
       -Woverloaded-virtual # warn if you overload (not override) a virtual
                            # function
       -Wpedantic # warn if non-standard C++ is used
-      -Wconversion # warn on type conversions that may lose data
+      # -Wconversion # warn on type conversions that may lose data
       -Wsign-conversion # warn on sign conversions
       -Wnull-dereference # warn if a null dereference is detected
       -Wdouble-promotion # warn if float is implicit promoted to double
@@ -102,7 +102,7 @@ function(set_c_project_warnings project_name)
       -Wcast-align # warn for potential performance problem casts
       -Wunused # warn on anything being unused
       -Wpedantic # warn if non-standard C++ is used
-      -Wconversion # warn on type conversions that may lose data
+      # -Wconversion # warn on type conversions that may lose data
       -Wsign-conversion # warn on sign conversions
       -Wnull-dereference # warn if a null dereference is detected
       -Wdouble-promotion # warn if float is implicit promoted to double

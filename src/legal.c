@@ -1,8 +1,8 @@
 #include "cicero_types.h"
 
-const char *cicero_legal_move_errnum_to_string(int errnum)
+const char *cicero_legal_move_error_to_string(int ec)
 {
-    switch (errnum) {
+    switch (ec) {
         case CICERO_LEGAL_MOVE:                 return "legal move";
         case CICERO_MOVE_NOT_IN_SAME_DIRECTION: return "move not in same direction";
         case CICERO_MOVE_LEAVES_EMPTY_SQUARES:  return "move leaves empty squares";
@@ -10,8 +10,10 @@ const char *cicero_legal_move_errnum_to_string(int errnum)
         case CICERO_INVALID_CROSS_WORD:         return "invalid cross word";
         case CICERO_NO_TILES_PLAYED:            return "no tiles played";
         case CICERO_TOO_MANY_TILES:             return "too many tiles played";
-        case CICERO_WORD_TOO_SHORT:             return "word too short";
+        case CICERO_WORD_TOO_SHORT:             return "word is too short";
         case CICERO_FIRST_MOVE_MUST_OCCUPY_H8:  return "first move must occupy H8";
+        case CICERO_SQUARE_INVALID:             return "invalid square";
+        case CICERO_DIRECTION_INVALID:          return "invalid direction";
     }
     return "unknown error code";
 }

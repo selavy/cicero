@@ -25,19 +25,13 @@ endif()
 # ---- Compiler Options ----
 include(cmake/CompilerWarnings.cmake)
 include(cmake/tools.cmake)
-# add_library(c_project_warnings INTERFACE)
-# set_c_project_warnings(c_project_warnings)
-#
-# add_library(c_project_options INTERFACE)
-# target_compile_features(c_project_options   INTERFACE c_std_99)
-# include(cmake/Sanitizers.cmake)
-# if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-#     message("-- enabling sanitizers")
-#     enable_sanitizers(c_project_options)
-# endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 # ---- Add dependencies ----
 include(cmake/CPM.cmake)
+# set(CPM_SOURCE_CACHE "extern")
+set(FETCHCONTENT_BASE_DIR "extern")
+
+CPMUsePackageLock(package-lock.cmake)
 
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.6.0")
@@ -46,8 +40,14 @@ CPMAddPackage(
     NAME cgreen
     GIT_TAG 1.4.0
     GITHUB_REPOSITORY cgreen-devs/cgreen
-    OPTIONS "CGREEN_WITH_UNIT_TESTS OFF"
+    OPTIONS "CGREEN_WITH_UNIT_TESTS OFF" "CMAKE_INSTALL_BINDIR bin"
 )
+
+# CPMAddPackage(
+#     NAME klib
+#     GIT_TAG master
+#     GITHUB_REPOSITORY attractivechaos/klib
+# )
 
 # ---- Create Library ----
 add_library(Cicero

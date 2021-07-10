@@ -1,0 +1,1 @@
+let g:syntastic_c_include_dirs += ['/home/peter/github.com/cicero/build/_deps/cgreen-src/include/cgreen/']
