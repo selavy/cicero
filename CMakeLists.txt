@@ -42,6 +42,9 @@ CPMAddPackage(
     GITHUB_REPOSITORY cgreen-devs/cgreen
     OPTIONS "CGREEN_WITH_UNIT_TESTS OFF" "CMAKE_INSTALL_BINDIR bin"
 )
+add_library(CGreen INTERFACE)
+target_link_libraries(CGreen INTERFACE ${CGREEN_SHARED_LIBRARY})
+target_include_directories(CGreen INTERFACE ${CGREEN_PUBLIC_INCLUDE_DIRS})
 
 # CPMAddPackage(
 #     NAME klib
