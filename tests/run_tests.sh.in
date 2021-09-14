@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 # TODO: figure out how to find this executable via cmake
-_deps/cgreen-build/tools/cgreen-runner ./lib/*_test.so "$@"
+extern/cgreen-build/tools/cgreen-runner ./lib/*_test.so "$@"

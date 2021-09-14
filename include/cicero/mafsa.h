@@ -20,12 +20,7 @@ struct mafsa
 };
 typedef struct mafsa mafsa;
 
-struct mafsa_edges
-{
-    int  terminal;
-    char edges[27]; // [A-Z], null-terminated
-};
-typedef struct mafsa_edges mafsa_edges;
+typedef cicero_edges mafsa_edges;
 
 cicero_api int  mafsa_isword(const mafsa *m, const char *const word);
 cicero_api int  mafsa_isterm(const mafsa *m, int s);

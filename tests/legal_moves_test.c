@@ -2,6 +2,7 @@
 #include <cicero/cicero.h>
 #include <string.h>
 #include <assert.h>
+#include "utils.h"
 
 struct move
 {
@@ -12,6 +13,33 @@ struct move
 };
 typedef struct move move_t;
 _Static_assert(sizeof(move_t) == 18, "!");
+
+struct engine_move
+{
+    cicero_move move;
+    char tiles[CICERO_MAX_WORD_LEN + 1];
+    int  squares[CICERO_MAX_WORD_LEN + 1];
+};
+typedef struct engine_move engine_move;
+
+engine_move move_to_engine_move(move_t m)
+{
+    // precondition: `m` is a legal move
+    engine_move rv;
+    rv.move.ntiles = m.len;
+    int sq = m.sq;
+    int dir = m.dir;
+    assert(dir == CICERO_HORZ || dir == CICERO_VERT);
+    for (int i = 0; i < rv.move.ntiles; ++i) {
+        rv.squares[i] = sq;
+        rv.tiles[i] = m.tiles[i];
+        sq += dir;
+    }
+    rv.move.tiles = &rv.tiles[0];
+    rv.move.squares = &rv.squares[0];
+    rv.move.direction = dir;
+    return rv;
+}
 
 int move_is_valid(const move_t *const move)
 {
@@ -173,19 +201,36 @@ Ensure(LegalMoves, add_legal_moves)
     legal_moves_destroy(&moves);
 }
 
-#if 0
-Describe(GenerateMovesFromFirstPosition);
-BeforeEach(GenerateMovesFromFirstPosition) {}
-AfterEach(GenerateMovesFromFirstPosition) {}
+#if 1
+void my_on_legal_move(void *data, const char *word, int sq, int dir)
+{
+    legal_moves_t *moves = data;
+    move_t move = move_make(word, sq, dir);
+    int rc = legal_moves_push(moves, &move);
+    assert_ok(rc);
+}
 
-Ensure(GenerateMovesFromFirstPosition, UNRYFIA_rack_from_starting_position)
+cicero_edges my_prefix_edges(void *data, const char *prefix)
+{
+    const mafsa *m = data;
+    return mafsa_prefix_edges(m, prefix);
+}
+
+int my_is_word(const void *data, const char *word)
+{
+    const mafsa *m = data;
+    return mafsa_prefix_edges(m, word).terminal;
+}
+
+Ensure(LegalMoves, UNRYFIA_rack_from_starting_position)
 {
     cicero engine;
-    cicero_savepos sp;
+    // cicero_savepos sp;
     cicero_callbacks cb;
     mafsa m;
+    legal_moves_t moves = legal_moves_make();
 
-    const char* const words = {
+    const char* const words[] = {
         "UNIFY",
         "FRY",
         "APPLE",
@@ -195,14 +240,33 @@ Ensure(GenerateMovesFromFirstPosition, UNRYFIA_rack_from_starting_position)
         "SULFURED",
     };
 
-    m = create_mafsa(words, ASIZE(words));
-
-    // typedef void (*on_legal_move)(void *data, const char *word, int sq, int dir);
-    // typedef cicero_edges (*prefix_edges)(void *data, const char *prefix);
-    // on_legal_move onlegal;
-    // const void   *onlegaldata;
-    // prefix_edges  getedges;
-    // const void   *getedgesdata;
+    m = create_mafsa(words);
+    cb.onlegal = my_on_legal_move;
+    cb.onlegaldata = &moves;
+    cb.getedges = my_prefix_edges;
+    cb.getedgesdata = &m;
     cicero_init(&engine, cb);
+
+#if 1
+    {
+        move_t mm = move_make("UNIFY", SQ_H8, CICERO_HORZ);
+        engine_move em = move_to_engine_move(mm);
+        cicero_move* cm = &em.move;
+        (void)cm;
+
+        // cicero_move move;
+        // move.tiles = "UNIFY";
+        // move.squares = { SQ_H8, SQ_H9, SQ_H10, SQ_H11, SQ_H12 };
+        // move.ntiles = strlen(move.tiles);
+        // move.direction = CICERO_HORZ;
+
+        int rc = cicero_legal_move(&engine, cm);
+        // (void)rc;
+        assert_that(rc, is_equal_to(CICERO_LEGAL_MOVE));
+    }
+#endif
+
+    mafsa_free(&m);
+    legal_moves_destroy(&moves);
 }
 #endif
