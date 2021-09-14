@@ -1,13 +1,10 @@
 #ifndef CICERO_MAFSA__H_
 #define CICERO_MAFSA__H_
 
+#include <cicero/cicero.h>
+
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-// TODO: pull these sorts of defines out into separate header?
-#ifndef cicero_api
-#define cicero_api extern
 #endif
 
 // TODO: add allocate / deallocate API for custom allocators
