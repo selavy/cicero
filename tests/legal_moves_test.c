@@ -22,22 +22,21 @@ struct engine_move
 };
 typedef struct engine_move engine_move;
 
-engine_move move_to_engine_move(move_t m)
+engine_move* move_to_engine_move(move_t m, engine_move* rv)
 {
     // precondition: `m` is a legal move
-    engine_move rv;
-    rv.move.ntiles = m.len;
+    rv->move.ntiles = m.len;
     int sq = m.sq;
     int dir = m.dir;
     assert(dir == CICERO_HORZ || dir == CICERO_VERT);
-    for (int i = 0; i < rv.move.ntiles; ++i) {
-        rv.squares[i] = sq;
-        rv.tiles[i] = m.tiles[i];
+    for (int i = 0; i < rv->move.ntiles; ++i) {
+        rv->squares[i] = sq;
+        rv->tiles[i] = m.tiles[i];
         sq += dir;
     }
-    rv.move.tiles = &rv.tiles[0];
-    rv.move.squares = &rv.squares[0];
-    rv.move.direction = dir;
+    rv->move.tiles = &rv->tiles[0];
+    rv->move.squares = &rv->squares[0];
+    rv->move.direction = dir;
     return rv;
 }
 
@@ -201,7 +200,6 @@ Ensure(LegalMoves, add_legal_moves)
     legal_moves_destroy(&moves);
 }
 
-#if 1
 void my_on_legal_move(void *data, const char *word, int sq, int dir)
 {
     legal_moves_t *moves = data;
@@ -247,26 +245,13 @@ Ensure(LegalMoves, UNRYFIA_rack_from_starting_position)
     cb.getedgesdata = &m;
     cicero_init(&engine, cb);
 
-#if 1
     {
-        move_t mm = move_make("UNIFY", SQ_H8, CICERO_HORZ);
-        engine_move em = move_to_engine_move(mm);
-        cicero_move* cm = &em.move;
-        (void)cm;
-
-        // cicero_move move;
-        // move.tiles = "UNIFY";
-        // move.squares = { SQ_H8, SQ_H9, SQ_H10, SQ_H11, SQ_H12 };
-        // move.ntiles = strlen(move.tiles);
-        // move.direction = CICERO_HORZ;
-
-        int rc = cicero_legal_move(&engine, cm);
-        // (void)rc;
+        engine_move em;
+        move_to_engine_move(move_make("UNIFY", SQ_H8, CICERO_HORZ), &em);
+        int rc = cicero_legal_move(&engine, &em.move);
         assert_that(rc, is_equal_to(CICERO_LEGAL_MOVE));
     }
-#endif
 
     mafsa_free(&m);
     legal_moves_destroy(&moves);
 }
-#endif
