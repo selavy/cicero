@@ -3,26 +3,11 @@
 #include <cicero/mafsa.h>
 #include <string.h>
 #include <assert.h>
-
-#define assert_ok(x) (assert_that(x, is_equal_to(0)))
-#define ASIZE(x) (sizeof(x)/sizeof(x[0]))
-
+#include "utils.h"
 
 Describe(BuildMAFSA);
 BeforeEach(BuildMAFSA) {}
 AfterEach(BuildMAFSA) {}
-
-mafsa create_mafsa(const char* const words[], const size_t n_words)
-{
-    mafsa         m;
-    mafsa_builder builder;
-    assert_ok(mafsa_builder_start(&builder));
-    for (size_t i = 0; i < n_words; ++i) {
-        assert_ok(mafsa_builder_insert(&builder, words[i]));
-    }
-    assert_ok(mafsa_builder_finish(&builder, &m));
-    return m;
-}
 
 Ensure(BuildMAFSA, added_word_is_found_and_terminal)
 {
@@ -43,9 +28,8 @@ Ensure(BuildMAFSA, added_word_is_found_and_terminal)
         "WONDERFUL",
         "WOWOW",
     };
-    const size_t n_words = ASIZE(words);
-    m = create_mafsa(words, n_words);
-    for (size_t i = 0; i < n_words; ++i) {
+    m = create_mafsa(words);
+    for (size_t i = 0; i < ASIZE(words); ++i) {
         found = mafsa_isword(&m, words[i]);
         assert_that(found != 0);
     }
@@ -116,9 +100,8 @@ Ensure(BuildMAFSA, get_prefix_edges)
         "SULFATE",
         "SULFATES",
     };
-    const size_t n_words = ASIZE(words);
-    m = create_mafsa(words, n_words);
-    for (size_t i = 0; i < n_words; ++i) {
+    m = create_mafsa(words);
+    for (size_t i = 0; i < ASIZE(words); ++i) {
         rc = mafsa_isword(&m, words[i]);
         assert_that(rc != 0);
     }

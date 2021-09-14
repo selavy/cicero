@@ -183,6 +183,20 @@ Ensure(GenerateMovesFromFirstPosition, UNRYFIA_rack_from_starting_position)
     cicero engine;
     cicero_savepos sp;
     cicero_callbacks cb;
+    mafsa m;
+
+    const char* const words = {
+        "UNIFY",
+        "FRY",
+        "APPLE",
+        "ORANGE",
+        "HELLO",
+        "WORLD",
+        "SULFURED",
+    };
+
+    m = create_mafsa(words, ASIZE(words));
+
     // typedef void (*on_legal_move)(void *data, const char *word, int sq, int dir);
     // typedef cicero_edges (*prefix_edges)(void *data, const char *prefix);
     // on_legal_move onlegal;
@@ -190,20 +204,5 @@ Ensure(GenerateMovesFromFirstPosition, UNRYFIA_rack_from_starting_position)
     // prefix_edges  getedges;
     // const void   *getedgesdata;
     cicero_init(&engine, cb);
-}
-#endif
-
-
-#if 0
-TestSuite *our_tests() {
-    TestSuite *suite = create_test_suite();
-    add_test_with_context(suite, LegalMoves, legal_moves_starts_empty);
-    return suite;
-}
-
-int main(int argc, char **argv) {
-    (void)argc;
-    (void)argv;
-    return run_test_suite(our_tests(), create_text_reporter());
 }
 #endif
