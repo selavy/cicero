@@ -1,17 +1,17 @@
 #ifndef CICERO_TYPES__H_
 #define CICERO_TYPES__H_
 
-#include <cicero/cicero.h>
 #include <assert.h>
+#include <cicero/cicero.h>
 #include <stdlib.h>
 #include <string.h>
-
 
 // TEMP TEMP
 #define DO_TRACE
 #ifdef DO_TRACE
 #include <stdio.h>
-#define TRACE(fmt, ...) fprintf(stderr, "[TRACE (%s)]: " fmt "\n", __func__, ##__VA_ARGS__);
+#define TRACE(fmt, ...) \
+    fprintf(stderr, "[TRACE (%s)]: " fmt "\n", __func__, ##__VA_ARGS__);
 #else
 #define TRACE(fmt, ...)
 #endif
@@ -26,12 +26,12 @@ extern "C" {
 
 #define ASIZE(x) (sizeof(x) / sizeof(x[0]))
 
-
-typedef uint8_t  u8;
+typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
+// clang-format off
 enum {
     SQ_A1, SQ_A2, SQ_A3, SQ_A4, SQ_A5, SQ_A6, SQ_A7, SQ_A8, SQ_A9, SQ_A10, SQ_A11, SQ_A12, SQ_A13, SQ_A14, SQ_A15,
     SQ_B1, SQ_B2, SQ_B3, SQ_B4, SQ_B5, SQ_B6, SQ_B7, SQ_B8, SQ_B9, SQ_B10, SQ_B11, SQ_B12, SQ_B13, SQ_B14, SQ_B15,
@@ -50,11 +50,13 @@ enum {
     SQ_O1, SQ_O2, SQ_O3, SQ_O4, SQ_O5, SQ_O6, SQ_O7, SQ_O8, SQ_O9, SQ_O10, SQ_O11, SQ_O12, SQ_O13, SQ_O14, SQ_O15,
     NUM_SQUARES
 };
+// clang-format off
 _Static_assert(SQ_A1  ==   0);
 _Static_assert(SQ_H8  == 112);
 _Static_assert(SQ_I8  == 127);
 _Static_assert(SQ_O15 == 224);
 
+// clang-format off
 static const char* const SQ[225] = {
     " A1", " A2", " A3", " A4", " A5", " A6", " A7", " A8", " A9", "A10", "A11", "A12", "A13", "A14", "A15",
     " B1", " B2", " B3", " B4", " B5", " B6", " B7", " B8", " B9", "B10", "B11", "B12", "B13", "B14", "B15",
@@ -72,6 +74,7 @@ static const char* const SQ[225] = {
     " N1", " N2", " N3", " N4", " N5", " N6", " N7", " N8", " N9", "N10", "N11", "N12", "N13", "N14", "N15",
     " O1", " O2", " O3", " O4", " O5", " O6", " O7", " O8", " O9", "O10", "O11", "O12", "O13", "O14", "O15",
 };
+// clang-format off
 
 #define SQNAME(x) (((0 <= (x)) && ((x) < 225)) ? SQ[x] : "INV")
 

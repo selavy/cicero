@@ -4,12 +4,11 @@
 #include <cicero/cicero.h>
 #include <cicero/mafsa.h>
 
-#define ASIZE(x) (sizeof(x)/sizeof(x[0]))
+#define ASIZE(x) (sizeof(x) / sizeof(x[0]))
 #define assert_ok(x) (assert_that(x, is_equal_to(0)))
 
-mafsa create_mafsa_(const char* const words[], const size_t n_words)
-{
-    mafsa         m;
+mafsa create_mafsa_(const char* const words[], const size_t n_words) {
+    mafsa m;
     mafsa_builder builder;
     assert_ok(mafsa_builder_start(&builder));
     for (size_t i = 0; i < n_words; ++i) {
@@ -21,6 +20,7 @@ mafsa create_mafsa_(const char* const words[], const size_t n_words)
 
 #define create_mafsa(words) create_mafsa_(words, ASIZE(words))
 
+// clang-format off
 
 enum {
     SQ_A1, SQ_A2, SQ_A3, SQ_A4, SQ_A5, SQ_A6, SQ_A7, SQ_A8, SQ_A9, SQ_A10, SQ_A11, SQ_A12, SQ_A13, SQ_A14, SQ_A15,
@@ -39,3 +39,5 @@ enum {
     SQ_N1, SQ_N2, SQ_N3, SQ_N4, SQ_N5, SQ_N6, SQ_N7, SQ_N8, SQ_N9, SQ_N10, SQ_N11, SQ_N12, SQ_N13, SQ_N14, SQ_N15,
     SQ_O1, SQ_O2, SQ_O3, SQ_O4, SQ_O5, SQ_O6, SQ_O7, SQ_O8, SQ_O9, SQ_O10, SQ_O11, SQ_O12, SQ_O13, SQ_O14, SQ_O15,
 };
+
+// clang-format on

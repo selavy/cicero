@@ -1,6 +1,7 @@
 #ifndef CICERO_TABLES_H_
 #define CICERO_TABLES_H_
 
+// clang-format off
 
 // 26 letters x 2 (blank not / blank) + 1 empty = 53
 static const int scrabble__letter_values[53] = {
@@ -101,7 +102,6 @@ static const int scrabble__double_letter_squares[226] = {
     1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, // O
     1,
 };
-// clang-format on
 
 #define WORDS_WITH_FRIENDS
 #ifdef WORDS_WITH_FRIENDS
@@ -199,6 +199,6 @@ static const int words_with_friends__double_letter_squares[226] = {
 #undef _
 // clang-format on
 
-#endif // WORDS_WITH_FRIENDS
+#endif  // WORDS_WITH_FRIENDS
 
-#endif // CICERO_TABLES_H_
+#endif  // CICERO_TABLES_H_

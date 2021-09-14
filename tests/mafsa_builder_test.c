@@ -1,32 +1,22 @@
+#include <assert.h>
 #include <cgreen/cgreen.h>
 #include <cicero/cicero.h>
 #include <cicero/mafsa.h>
 #include <string.h>
-#include <assert.h>
+
 #include "utils.h"
 
 Describe(BuildMAFSA);
 BeforeEach(BuildMAFSA) {}
 AfterEach(BuildMAFSA) {}
 
-Ensure(BuildMAFSA, added_word_is_found_and_terminal)
-{
+Ensure(BuildMAFSA, added_word_is_found_and_terminal) {
     int found;
     mafsa m;
 
     const char* const words[] = {
-        "HELLO",
-        "GOODBYE",
-        "ATE",
-        "ATTENTION",
-        "ATT",
-        "BATS",
-        "BAT",
-        "BATT",
-        "BATTS",
-        "WORLD",
-        "WONDERFUL",
-        "WOWOW",
+        "HELLO", "GOODBYE", "ATE",   "ATTENTION", "ATT",       "BATS",
+        "BAT",   "BATT",    "BATTS", "WORLD",     "WONDERFUL", "WOWOW",
     };
     m = create_mafsa(words);
     for (size_t i = 0; i < ASIZE(words); ++i) {
@@ -48,57 +38,22 @@ Ensure(BuildMAFSA, added_word_is_found_and_terminal)
     mafsa_free(&m);
 }
 
-
-Ensure(BuildMAFSA, get_prefix_edges)
-{
+Ensure(BuildMAFSA, get_prefix_edges) {
     int rc;
     mafsa m;
 
     const char* const words[] = {
-        "ABACTERIAL",
-        "ABACTINAL",
-        "ABACTINALLY",
-        "ABACTOR",
-        "ABACTORS",
-        "ABACUS",
-        "ABACUSES",
-        "ABAFT",
-        "ABAKA",
-        "ABAKAS",
-        "ABALONE",
-        "ABALONES",
-        "ABAMP",
-        "ABAMPERE",
-        "ABAMPERES",
-        "ABAMPS",
-        "ABAND",
-        "ABANDED",
-        "ABANDING",
-        "ABANDON",
-        "ABANDONED",
-        "ABANDONEDLY",
-        "ABANDONEE",
-        "ABANDONEES",
-        "ABANDONER",
-        "ABANDONERS",
-        "ABANDONING",
-        "ABANDONMENT",
-        "ABANDONMENTS",
-        "ABANDONS",
-        "ABANDONWARE",
-        "ABANDONWARES",
-        "ABANDS",
-        "ABAPICAL",
-        "ABAS",
-        "ABASE",
-        "ABASED",
-        "SUFFIX",
-        "SUFFICIENT",
-        "SUFFICE",
-        "SUFFICATE",
-        "SUFFICATES",
-        "SULFATE",
-        "SULFATES",
+        "ABACTERIAL",   "ABACTINAL",   "ABACTINALLY", "ABACTOR",
+        "ABACTORS",     "ABACUS",      "ABACUSES",    "ABAFT",
+        "ABAKA",        "ABAKAS",      "ABALONE",     "ABALONES",
+        "ABAMP",        "ABAMPERE",    "ABAMPERES",   "ABAMPS",
+        "ABAND",        "ABANDED",     "ABANDING",    "ABANDON",
+        "ABANDONED",    "ABANDONEDLY", "ABANDONEE",   "ABANDONEES",
+        "ABANDONER",    "ABANDONERS",  "ABANDONING",  "ABANDONMENT",
+        "ABANDONMENTS", "ABANDONS",    "ABANDONWARE", "ABANDONWARES",
+        "ABANDS",       "ABAPICAL",    "ABAS",        "ABASE",
+        "ABASED",       "SUFFIX",      "SUFFICIENT",  "SUFFICE",
+        "SUFFICATE",    "SUFFICATES",  "SULFATE",     "SULFATES",
     };
     m = create_mafsa(words);
     for (size_t i = 0; i < ASIZE(words); ++i) {
