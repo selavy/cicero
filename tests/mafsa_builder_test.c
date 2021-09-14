@@ -118,7 +118,6 @@ Ensure(BuildMAFSA, get_prefix_edges)
     };
     const size_t n_words = ASIZE(words);
     m = create_mafsa(words, n_words);
-
     for (size_t i = 0; i < n_words; ++i) {
         rc = mafsa_isword(&m, words[i]);
         assert_that(rc != 0);
@@ -134,6 +133,35 @@ Ensure(BuildMAFSA, get_prefix_edges)
     for (size_t i = 0; i < n_missing; ++i) {
         rc = mafsa_isword(&m, missing[i]);
         assert_that(rc == 0);
+    }
+
+    {
+        mafsa_edges edges = mafsa_prefix_edges(&m, "SU");
+        assert_that(edges.terminal, is_false);
+        assert_that(edges.edges[0], is_equal_to('F'));
+        assert_that(edges.edges[1], is_equal_to('L'));
+        assert_that(edges.edges[2], is_equal_to('\0'));
+    }
+
+    {
+        mafsa_edges edges = mafsa_prefix_edges(&m, "SULFATE");
+        assert_that(edges.terminal, is_true);
+        assert_that(edges.edges[0], is_equal_to('S'));
+        assert_that(edges.edges[1], is_equal_to('\0'));
+    }
+
+    {
+        mafsa_edges edges = mafsa_prefix_edges(&m, "ABA");
+        assert_that(edges.terminal, is_false);
+        assert_that(edges.edges[0], is_equal_to('C'));
+        assert_that(edges.edges[1], is_equal_to('F'));
+        assert_that(edges.edges[2], is_equal_to('K'));
+        assert_that(edges.edges[3], is_equal_to('L'));
+        assert_that(edges.edges[4], is_equal_to('M'));
+        assert_that(edges.edges[5], is_equal_to('N'));
+        assert_that(edges.edges[6], is_equal_to('P'));
+        assert_that(edges.edges[7], is_equal_to('S'));
+        assert_that(edges.edges[8], is_equal_to('\0'));
     }
 
     mafsa_free(&m);
