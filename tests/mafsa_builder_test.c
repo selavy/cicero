@@ -44,9 +44,7 @@ Ensure(BuildMAFSA, added_word_is_found_and_terminal)
         "WOWOW",
     };
     const size_t n_words = ASIZE(words);
-
     m = create_mafsa(words, n_words);
-
     for (size_t i = 0; i < n_words; ++i) {
         found = mafsa_isword(&m, words[i]);
         assert_that(found != 0);
@@ -58,8 +56,7 @@ Ensure(BuildMAFSA, added_word_is_found_and_terminal)
         "HELL",
         "WORLDA",
     };
-    const size_t n_missing = sizeof(missing) / sizeof(missing[0]);
-    for (size_t i = 0; i < n_missing; ++i) {
+    for (size_t i = 0; i < ASIZE(missing); ++i) {
         found = mafsa_isword(&m, missing[i]);
         assert_that(found == 0);
     }
@@ -71,7 +68,6 @@ Ensure(BuildMAFSA, added_word_is_found_and_terminal)
 Ensure(BuildMAFSA, get_prefix_edges)
 {
     int rc;
-    mafsa_builder builder;
     mafsa m;
 
     const char* const words[] = {
@@ -121,17 +117,7 @@ Ensure(BuildMAFSA, get_prefix_edges)
         "SULFATES",
     };
     const size_t n_words = ASIZE(words);
-
-    rc = mafsa_builder_start(&builder);
-    assert_that(rc, is_equal_to(0));
-
-    for (size_t i = 0; i < n_words; ++i) {
-        rc = mafsa_builder_insert(&builder, words[i]);
-        assert_that(rc, is_equal_to(0));
-    }
-
-    rc = mafsa_builder_finish(&builder, &m);
-    assert_that(rc, is_equal_to(0));
+    m = create_mafsa(words, n_words);
 
     for (size_t i = 0; i < n_words; ++i) {
         rc = mafsa_isword(&m, words[i]);
