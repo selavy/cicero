@@ -5,6 +5,11 @@
 extern "C" {
 #endif
 
+// TODO: pull these sorts of defines out into separate header?
+#ifndef cicero_api
+#define cicero_api extern
+#endif
+
 // TODO: add allocate / deallocate API for custom allocators
 
 struct mafsa_node_ { int children[26]; };
@@ -25,10 +30,10 @@ struct mafsa_edges
 };
 typedef struct mafsa_edges mafsa_edges;
 
-extern int  mafsa_isword(const mafsa *m, const char *const word);
-extern int  mafsa_isterm(const mafsa *m, int s);
-extern void mafsa_free(mafsa *m);
-extern mafsa_edges mafsa_prefix_edges(const mafsa *m, const char *const word);
+cicero_api int  mafsa_isword(const mafsa *m, const char *const word);
+cicero_api int  mafsa_isterm(const mafsa *m, int s);
+cicero_api void mafsa_free(mafsa *m);
+cicero_api mafsa_edges mafsa_prefix_edges(const mafsa *m, const char *const word);
 
 
 struct mafsa_builder
@@ -40,9 +45,9 @@ struct mafsa_builder
 };
 typedef struct mafsa_builder mafsa_builder;
 
-extern int mafsa_builder_start (mafsa_builder *m);
-extern int mafsa_builder_insert(mafsa_builder *m, const char *const word);
-extern int mafsa_builder_finish(mafsa_builder *m, mafsa *out);
+cicero_api int mafsa_builder_start (mafsa_builder *m);
+cicero_api int mafsa_builder_insert(mafsa_builder *m, const char *const word);
+cicero_api int mafsa_builder_finish(mafsa_builder *m, mafsa *out);
 
 #ifdef __cplusplus
 }
