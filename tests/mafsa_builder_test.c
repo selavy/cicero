@@ -164,5 +164,11 @@ Ensure(BuildMAFSA, get_prefix_edges)
         assert_that(edges.edges[8], is_equal_to('\0'));
     }
 
+    {
+        mafsa_edges edges = mafsa_prefix_edges(&m, "NOTAWORD");
+        assert_that(edges.terminal, is_false);
+        assert_that(edges.edges[0], is_equal_to('\0'));
+    }
+
     mafsa_free(&m);
 }
