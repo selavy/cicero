@@ -51,10 +51,10 @@ enum {
     NUM_SQUARES
 };
 // clang-format off
-_Static_assert(SQ_A1  ==   0);
-_Static_assert(SQ_H8  == 112);
-_Static_assert(SQ_I8  == 127);
-_Static_assert(SQ_O15 == 224);
+_Static_assert(SQ_A1  ==   0, "");
+_Static_assert(SQ_H8  == 112, "");
+_Static_assert(SQ_I8  == 127, "");
+_Static_assert(SQ_O15 == 224, "");
 
 // clang-format off
 static const char* const SQ[225] = {
@@ -111,7 +111,7 @@ internal u64 clearlsb(u64 x)  { return x & (x - 1); }
 
 internal void setasq(u64* asq, int sq)
 {
-    assert(0 <= sq < 225);
+    assert(0 <= sq && sq < 225);
     const int m = sq / 64;
     const int n = sq % 64;
     asq[m] |= (u64)(1ull << n);
@@ -119,7 +119,7 @@ internal void setasq(u64* asq, int sq)
 
 internal void clrasq(u64* asq, int sq)
 {
-    assert(0 <= sq < 225);
+    assert(0 <= sq && sq < 225);
     const int m = sq / 64;
     const int n = sq % 64;
     asq[m] &= ~((u64)(1ull << n));
@@ -127,7 +127,7 @@ internal void clrasq(u64* asq, int sq)
 
 internal int getasq(const u64* asq, int sq)
 {
-    assert(0 <= sq < 225);
+    assert(0 <= sq && sq < 225);
     const int m = sq / 64;
     const int n = sq % 64;
     return (asq[m] & ((u64)(1ull << n))) != 0;
